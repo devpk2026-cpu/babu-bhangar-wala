@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#120b08" />
+  <title>Babu Bhangar Wala — Purane Gaane, Sachi Yaadein</title>
+  <meta name="description" content="Babu Bhangar Wala — a nostalgic retro music player for old songs, memories and chai." />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Libre+Baskerville:wght@400;700&family=Rye&display=swap');
+
+    :root {
+      --bg: #100b08;
+      --paper: #d6bd86;
+      --paper2: #f0d99d;
+      --ink: #2b1a11;
+      --rust: #a74320;
+      --gold: #d69a2d;
+      --green: #39756b;
+      --cream: #f7e9c8;
+      --muted: #b89d75;
+      --glass: rgba(31, 23, 19, .72);
+      --line: rgba(241, 210, 154, .18);
+      --shadow: 0 25px 70px rgba(0,0,0,.55);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--cream);
+      background:
+        radial-gradient(circle at 50% 15%, rgba(174,100,34,.20), transparent 28%),
+        radial-gradient(circle at 10% 80%, rgba(61,117,107,.12), transparent 25%),
+        linear-gradient(135deg, #0b0806 0%, #1b110b 45%, #0b0806 100%);
+      font-family: "Libre Baskerville", Georgia, serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .10;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(255,255,255,.25) 0 1px, transparent 1px 4px),
+        repeating-linear-gradient(90deg, rgba(0,0,0,.25) 0 1px, transparent 1px 5px);
+      mix-blend-mode: overlay;
+      z-index: 20;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,.65) 100%);
+      z-index: 19;
+    }
+
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+
+    .page {
+      width: min(1250px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 22px 0 180px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Top sign */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 35px;
+    }
+
+    .neon {
+      border: 1px solid rgba(245,165,53,.65);
+      padding: 9px 14px;
+      color: #ffd27c;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font: 500 11px "DM Mono", monospace;
+      border-radius: 4px;
+      box-shadow: 0 0 18px rgba(214,154,45,.14), inset 0 0 12px rgba(214,154,45,.08);
+      background: rgba(30,18,10,.45);
+    }
+
+    .brand-strip {
+      color: var(--ink);
+      background: var(--paper);
+      padding: 9px 22px;
+      transform: rotate(-1deg);
+      box-shadow: 5px 7px 0 rgba(0,0,0,.25);
+      font-weight: 700;
+      letter-spacing: 2px;
+      font-size: 13px;
+      position: relative;
+    }
+
+    .brand-strip::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(0deg, transparent 0 4px, rgba(55,35,20,.08) 4px 5px);
+      pointer-events: none;
+    }
+
+    /* Hero */
+    .hero {
+      display: grid;
+      grid-template-columns: 190px 1fr 190px;
+      gap: 28px;
+      align-items: center;
+      min-height: 570px;
+    }
+
+    .side-note {
+      color: var(--ink);
+      background: var(--paper);
+      padding: 20px 16px;
+      box-shadow: var(--shadow);
+      transform: rotate(-3deg);
+      align-self: center;
+      position: relative;
+      max-width: 190px;
+    }
+
+    .side-note.right { transform: rotate(3deg); }
+    .side-note h4 {
+      margin: 0 0 10px;
+      font: 700 17px "Libre Baskerville", serif;
+      text-transform: uppercase;
+    }
+    .side-note p {
+      margin: 5px 0;
+      font-size: 11px;
+      line-height: 1.65;
+    }
+    .side-note .stamp {
+      margin-top: 13px;
+      display: inline-block;
+      border: 2px solid var(--rust);
+      color: var(--rust);
+      padding: 5px 7px;
+      font: 700 10px "DM Mono", monospace;
+      transform: rotate(-4deg);
+    }
+
+    .hero-center { text-align: center; }
+    .eyebrow {
+      color: var(--gold);
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      font: 500 11px "DM Mono", monospace;
+      margin-bottom: 15px;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: "Rye", Georgia, serif;
+      font-size: clamp(58px, 9vw, 124px);
+      line-height: .82;
+      letter-spacing: 1px;
+      color: #d8c08a;
+      text-shadow:
+        3px 4px 0 #6b421c,
+        7px 8px 0 rgba(0,0,0,.35);
+    }
+
+    h1 span {
+      display: block;
+      color: var(--gold);
+      font-size: .66em;
+      margin: 14px 0 4px;
+      text-shadow: 3px 4px 0 #6f3218;
+    }
+
+    .tagline {
+      margin: 25px auto 0;
+      color: #dbc28e;
+      font-size: 14px;
+      font-style: italic;
+    }
+
+    .tagline strong { color: #e4a64c; }
+
+    /* Radio */
+    .radio-wrap {
+      margin: 35px auto 0;
+      width: min(530px, 90%);
+      position: relative;
+    }
+
+    .radio {
+      height: 225px;
+      border-radius: 17px 17px 10px 10px;
+      border: 3px solid #6f4a28;
+      background:
+        linear-gradient(145deg, #8e7148, #3a291c 48%, #1e1611);
+      box-shadow: 0 25px 40px rgba(0,0,0,.55), inset 0 0 0 4px rgba(245,205,137,.10);
+      padding: 24px 28px;
+      transform: perspective(700px) rotateX(2deg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .radio::before {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; top: 0;
+      height: 7px;
+      background: #c3944f;
+      opacity: .45;
+    }
+
+    .radio-display {
+      height: 65px;
+      background: #161a14;
+      border: 3px solid #241b12;
+      box-shadow: inset 0 0 15px rgba(83, 184, 104,.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #91b45f;
+      font: 500 12px "DM Mono", monospace;
+      letter-spacing: 2px;
+    }
+
+    .radio-controls {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 19px;
+    }
+
+    .radio-btn {
+      width: 48px;
+      height: 40px;
+      border-radius: 5px;
+      border: 2px solid #1d1510;
+      background: linear-gradient(#8e7148,#4b3524);
+      color: #d5b67b;
+      box-shadow: 0 4px 0 #1a100b;
+      transition: transform .15s, filter .15s;
+    }
+    .radio-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #1a100b; }
+    .radio-btn:hover { filter: brightness(1.25); }
+
+    .speaker {
+      position: absolute;
+      width: 125px;
+      height: 125px;
+      border-radius: 50%;
+      top: 83px;
+      border: 9px solid #2c2118;
+      background: repeating-radial-gradient(circle, #15110e 0 3px, #4a3b2c 4px 5px);
+      box-shadow: inset 0 0 20px #000;
+    }
+    .speaker.left { left: 18px; }
+    .speaker.right { right: 18px; }
+
+    .radio-tuner {
+      position: absolute;
+      left: 165px; right: 165px;
+      top: 101px;
+      height: 30px;
+      border: 1px solid #c19453;
+      background: #15110e;
+      overflow: hidden;
+    }
+    .radio-tuner::before {
+      content: "88  92  96  100  104  108";
+      color: #bc965d;
+      font: 8px "DM Mono", monospace;
+      letter-spacing: 4px;
+      position: absolute;
+      top: 8px; left: 10px;
+    }
+    .radio-tuner::after {
+      content: "";
+      width: 2px; height: 23px;
+      background: #df4934;
+      position: absolute;
+      left: 54%;
+      top: 3px;
+      box-shadow: 0 0 8px #df4934;
+    }
+
+    .quote {
+      width: min(670px, 100%);
+      margin: 25px auto 0;
+      min-height: 86px;
+      padding: 18px 30px;
+      border: 1px solid rgba(229,190,115,.25);
+      border-radius: 15px;
+      background: rgba(37,26,20,.65);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 15px 45px rgba(0,0,0,.35);
+    }
+    .quote-text {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #e6d2a5;
+      transition: opacity .3s;
+    }
+    .quote-author {
+      margin-top: 7px;
+      color: #9b8362;
+      font: 10px "DM Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Playlist panel */
+    .playlist-panel {
+      margin-top: 30px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(21,15,12,.72);
+      box-shadow: var(--shadow);
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+    .panel-head h2 {
+      margin: 0;
+      font: 700 22px "Libre Baskerville", serif;
+      color: #e4ca94;
+    }
+    .panel-head small {
+      color: #927d62;
+      font: 10px "DM Mono", monospace;
+    }
+
+    .playlist-tools {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+    }
+    .playlist-input {
+      width: 100%;
+      border: 1px solid rgba(215,173,96,.25);
+      background: #100c09;
+      color: #e7d2a8;
+      border-radius: 10px;
+      padding: 13px 15px;
+      outline: none;
+      font: 12px "DM Mono", monospace;
+    }
+    .playlist-input:focus { border-color: rgba(215,173,96,.65); }
+    .load-btn {
+      border: 0;
+      border-radius: 10px;
+      padding: 0 18px;
+      color: #24150d;
+      background: var(--gold);
+      font: 700 11px "DM Mono", monospace;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: transform .2s, filter .2s;
+    }
+    .load-btn:hover { filter: brightness(1.12); transform: translateY(-1px); }
+
+    .player-shell {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: 250px 1fr;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .yt-window {
+      height: 145px;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #050403;
+      border: 1px solid rgba(255,255,255,.09);
+    }
+    #player { width: 100%; height: 100%; }
+
+    .player-info { min-width: 0; }
+    .now-playing {
+      color: #8e785d;
+      text-transform: uppercase;
+      font: 10px "DM Mono", monospace;
+      letter-spacing: 2px;
+    }
+    #trackTitle {
+      margin: 7px 0 12px;
+      color: #f0d9aa;
+      font-size: clamp(18px, 2vw, 27px);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .meter {
+      height: 35px;
+      display: flex;
+      align-items: end;
+      gap: 3px;
+      margin-bottom: 13px;
+    }
+    .bar {
+      width: 4px;
+      height: 10px;
+      background: #b97745;
+      border-radius: 4px;
+      opacity: .7;
+      animation: equalize .8s ease-in-out infinite alternate;
+      animation-play-state: paused;
+    }
+    .playing .bar { animation-play-state: running; }
+    .bar:nth-child(2n) { animation-delay: -.2s; }
+    .bar:nth-child(3n) { animation-delay: -.5s; }
+    @keyframes equalize { from { height: 5px; } to { height: 30px; } }
+
+    .control-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+    }
+    .ctrl {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      border: 1px solid rgba(220,187,126,.22);
+      background: rgba(255,255,255,.04);
+      color: #e6cc99;
+      transition: .2s;
+    }
+    .ctrl:hover { background: rgba(218,170,91,.14); transform: translateY(-2px); }
+    .ctrl.main {
+      width: 55px; height: 55px;
+      background: #d69a2d;
+      color: #26150b;
+      border-color: #e5bb67;
+      font-size: 18px;
+    }
+
+    .hint {
+      margin: 13px 0 0;
+      color: #796852;
+      font: 10px "DM Mono", monospace;
+    }
+    kbd {
+      border: 1px solid #65513c;
+      padding: 2px 5px;
+      border-radius: 4px;
+      color: #d3b47e;
+      background: #1b130d;
+    }
+
+    /* Floating details */
+    .float-note {
+      position: fixed;
+      z-index: 4;
+      padding: 8px 12px;
+      border: 1px solid rgba(218,174,98,.25);
+      color: #b49a71;
+      background: rgba(22,14,10,.78);
+      font: 9px "DM Mono", monospace;
+      letter-spacing: 1px;
+      backdrop-filter: blur(8px);
+    }
+    .float-note.a { left: 18px; top: 45%; transform: rotate(-90deg) translateX(-50%); transform-origin: left top; }
+    .float-note.b { right: 18px; top: 58%; transform: rotate(90deg) translateX(50%); transform-origin: right top; }
+
+    /* Bottom player */
+    .bottom-player {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      width: min(1050px, calc(100% - 28px));
+      z-index: 10;
+      border: 1px solid rgba(238,198,131,.28);
+      border-radius: 22px;
+      padding: 15px 18px;
+      background: rgba(25,20,17,.86);
+      backdrop-filter: blur(24px) saturate(1.2);
+      box-shadow: 0 20px 70px rgba(0,0,0,.7), 0 0 45px rgba(215,150,53,.07);
+    }
+
+    .bottom-inner {
+      display: grid;
+      grid-template-columns: minmax(190px, 1fr) 1.6fr auto;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .mini-title {
+      min-width: 0;
+    }
+    .mini-title small {
+      display: block;
+      color: #a18a6c;
+      font: 9px "DM Mono", monospace;
+      letter-spacing: 1.5px;
+      margin-bottom: 5px;
+    }
+    .mini-title strong {
+      display: block;
+      color: #f1d9a6;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 14px;
+    }
+
+    .progress-wrap { min-width: 0; }
+    .progress {
+      height: 4px;
+      background: #4b4036;
+      border-radius: 99px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #d68b35, #f0c47d);
+      box-shadow: 0 0 10px rgba(240,196,125,.35);
+    }
+    .time-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+      color: #806f5a;
+      font: 8px "DM Mono", monospace;
+    }
+
+    .bottom-controls {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+    }
+    .bottom-controls button {
+      width: 36px;
+      height: 36px;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      color: #d8c39b;
+      font-size: 15px;
+    }
+    .bottom-controls .primary {
+      width: 48px;
+      height: 48px;
+      background: #df9d32;
+      color: #24160c;
+      font-size: 18px;
+      box-shadow: 0 0 18px rgba(222,157,50,.18);
+    }
+
+    /* keyboard burst */
+    .coin-burst {
+      position: fixed;
+      pointer-events: none;
+      z-index: 30;
+      font: 700 14px "DM Mono", monospace;
+      color: #f2c56e;
+      animation: burst .8s ease forwards;
+    }
+    @keyframes burst {
+      0% { opacity: 0; transform: translate(-50%, 0) scale(.7); }
+      20% { opacity: 1; }
+      100% { opacity: 0; transform: translate(-50%, -70px) scale(1.2); }
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      left: 50%;
+      top: 25px;
+      transform: translate(-50%, -25px);
+      z-index: 50;
+      padding: 10px 15px;
+      color: #ead6ad;
+      background: rgba(29,19,12,.95);
+      border: 1px solid rgba(214,154,45,.3);
+      border-radius: 8px;
+      font: 10px "DM Mono", monospace;
+      opacity: 0;
+      pointer-events: none;
+      transition: .3s;
+    }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .side-note { display: none; }
+      .player-shell { grid-template-columns: 1fr; }
+      .yt-window { height: 220px; }
+      .bottom-inner { grid-template-columns: 1fr auto; }
+      .progress-wrap { grid-column: 1 / -1; grid-row: 2; }
+    }
+
+    @media (max-width: 600px) {
+      .page { width: min(100% - 20px, 1250px); padding-top: 12px; }
+      .topbar .neon { display: none; }
+      .brand-strip { font-size: 10px; padding: 8px 12px; }
+      .hero { min-height: auto; padding: 40px 0 20px; }
+      h1 { font-size: 62px; }
+      .radio { height: 185px; padding: 20px; }
+      .speaker { width: 80px; height: 80px; top: 80px; }
+      .radio.tuner { display: none; }
+      .speaker.left { left: 12px; }
+      .speaker.right { right: 12px; }
+      .radio-tuner { left: 105px; right: 105px; top: 86px; }
+      .quote { padding: 15px 18px; }
+      .playlist-tools { grid-template-columns: 1fr; }
+      .load-btn { height: 42px; }
+      .bottom-player { bottom: 8px; padding: 12px; }
+      .bottom-inner { gap: 8px; }
+      .bottom-controls button:nth-child(1),
+      .bottom-controls button:nth-child(5) { display: none; }
+      .float-note { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="toast" id="toast"></div>
+
+  <div class="float-note a">HANDLE WITH YAADEN</div>
+  <div class="float-note b">RATE FIX HAI • DIL KA NAHI</div>
+
+  <main class="page">
+    <header class="topbar">
+      <div class="neon">OLD IS GOLD</div>
+      <div class="brand-strip">YAadein • Gaane • Zamaana</div>
+      <div class="neon">EST. FOREVER ♥</div>
+    </header>
+
+    <section class="hero">
+      <aside class="side-note">
+        <h4>Hamare Yahan</h4>
+        <p>Purana samaan bikta hai!</p>
+        <p>Radio • Cassette • Tape</p>
+        <p>Cycle bell • Iron • Fan</p>
+        <span class="stamp">RATE FIX HAI</span>
+      </aside>
+
+      <div class="hero-center">
+        <div class="eyebrow">★ Desi Retro Radio ★</div>
+        <h1>BABU<span>BHANGAR</span>WALA</h1>
+        <p class="tagline">Purane gaane. <strong>Sachi yaadein.</strong> Seedha dil pe.</p>
+
+        <div class="radio-wrap">
+          <div class="radio" id="radio">
+            <div class="radio-display" id="radioDisplay">FM • YAADON KA STATION</div>
+            <div class="speaker left"></div>
+            <div class="speaker right"></div>
+            <div class="radio-tuner"></div>
+            <div class="radio-controls">
+              <button class="radio-btn" onclick="previousTrack()" aria-label="Previous">◀◀</button>
+              <button class="radio-btn" onclick="togglePlay()" aria-label="Play pause" id="radioPlay">▶</button>
+              <button class="radio-btn" onclick="nextTrack()" aria-label="Next">▶▶</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="quote">
+          <p class="quote-text" id="quoteText">"Waqt rukta nahi... par kuch gaane humein wahi rok dete hain."</p>
+          <div class="quote-author" id="quoteAuthor">— Babu ki Dukaan, Shaam ke 6 Baje</div>
+        </div>
+      </div>
+
+      <aside class="side-note right">
+        <h4>Purana Maal</h4>
+        <p>Jo beet gaya, woh phir nahi aata...</p>
+        <p>Lekin uske gaane aa jaate hain.</p>
+        <span class="stamp">HANDLE WITH YAADEN</span>
+      </aside>
+    </section>
+
+    <section class="playlist-panel">
+      <div class="panel-head">
+        <div>
+          <h2>Apni Playlist Lao</h2>
+          <small>YOUTUBE SEEDHA DIL TAK</small>
+        </div>
+        <small id="sourceLabel">DEFAULT RADIO</small>
+      </div>
+
+      <div class="playlist-tools">
+        <input
+          class="playlist-input"
+          id="playlistUrl"
+          type="text"
+          placeholder="Paste YouTube playlist URL or video URL..."
+          autocomplete="off"
+        />
+        <button class="load-btn" onclick="loadCustomSource()">Load Playlist</button>
+      <small style="display:block;grid-column:1/-1;color:#796852;font:9px &quot;DM Mono&quot;,monospace;margin-top:-3px;">Use a normal YouTube playlist URL: youtube.com/playlist?list=PL... • The original RD radio link must contain a valid 11-character video ID.</small>
+      </div>
+
+      <div class="player-shell">
+        <div class="yt-window">
+          <div id="player"></div>
+        </div>
+
+        <div class="player-info">
+          <div class="now-playing">Now Playing</div>
+          <div id="trackTitle">Babu Bhangar Wala Radio</div>
+          <div class="meter" id="meter">
+            <span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
+            <span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
+            <span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
+            <span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
+          </div>
+
+          <div class="control-row">
+            <button class="ctrl" onclick="previousTrack()" title="Previous">⏮</button>
+            <button class="ctrl main" onclick="togglePlay()" id="mainPlay" title="Play/Pause">▶</button>
+            <button class="ctrl" onclick="nextTrack()" title="Next">⏭</button>
+          </div>
+
+          <p class="hint"><kbd>SPACE</kbd> Play / Pause &nbsp; • &nbsp; Click the radio for a desi surprise</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="bottom-player">
+    <div class="bottom-inner">
+      <div class="mini-title">
+        <small>♪ BABU BHANGAR WALA FM</small>
+        <strong id="miniTitle">Purane Gaane, Sachi Yaadein</strong>
+      </div>
+
+      <div class="progress-wrap">
+        <div class="progress" id="progress" title="Seek">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="time-row">
+          <span id="currentTime">00:00</span>
+          <span id="duration">--:--</span>
+        </div>
+      </div>
+
+      <div class="bottom-controls">
+        <button onclick="previousTrack()" title="Previous">⏮</button>
+        <button class="primary" onclick="togglePlay()" id="bottomPlay" title="Play/Pause">▶</button>
+        <button onclick="nextTrack()" title="Next">⏭</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /*
+      BABU BHANGAR WALA — YouTube player
+      IMPORTANT:
+      The URL originally supplied for the default source contains a 10-character
+      video ID: 9JJuXI5YAU. YouTube video IDs are 11 characters, so that URL
+      cannot be loaded until the missing character is corrected.
+    */
+
+    const DEFAULT_YOUTUBE_URL =
+      "https://www.youtube.com/watch?v=Nl8jRJJIySE&list=RDNl8jRJJIySE&start_radio=1";
+
+    let player = null;
+    let playerReady = false;
+    let playerMode = "single"; // single | playlist
+    let quotesIndex = 0;
+    let progressTimer = null;
+
+    const quotes = [
+      ['"Waqt rukta nahi... par kuch gaane humein wahi rok dete hain."', 'Babu ki Dukaan, Shaam ke 6 Baje'],
+      ['"Jo beet gaya, woh yaad ban gaya. Jo gaana baj gaya, woh dil mein reh gaya."', 'Purani Gali • Purana Radio'],
+      ['"Cassette ulajh jaaye toh pencil se rewind kar lena... yaadein nahi rukni chahiye."', '1998 • Mohalle Ka Rule'],
+      ['"Kuch awaazein speaker se nahi, seedha bachpan se aati hain."', 'Babu Bhangar Wala FM'],
+      ['"Gaane purane hain... par feeling abhi bhi full HD hai."', 'Dil Se, 100% Original'],
+      ['"Ek chai, ek radio, aur thoda sa waqt — bas itna hi toh chahiye."', 'Dukaan Band Hone Se Pehle']
+    ];
+
+    // YouTube's API calls this function when it has loaded.
+    window.onYouTubeIframeAPIReady = function () {
+      createPlayer();
+    };
+
+    function createPlayer() {
+      player = new YT.Player("player", {
+        width: "100%",
+        height: "100%",
+        videoId: "dQw4w9WgXcQ", // harmless temporary video; replaced below
+        playerVars: {
+          autoplay: 0,
+          controls: 1,
+          rel: 0,
+          playsinline: 1,
+          origin: location.origin === "null" ? "" : location.origin
+        },
+        events: {
+          onReady: function () {
+            playerReady = true;
+            updateUIFromPlayer();
+            loadDefaultSource();
+          },
+          onStateChange: handlePlayerState,
+          onError: handlePlayerError
+        }
+      });
+    }
+
+    function parseYouTubeUrl(raw) {
+      let value = raw.trim();
+
+      // Accept plain playlist IDs as well as URLs.
+      if (/^[A-Za-z0-9_-]{16,}$/.test(value)) {
+        return { playlistId: value, videoId: null, isMix: false };
+      }
+
+      try {
+        const url = new URL(value);
+        const host = url.hostname.replace(/^www\./, "");
+        const videoId = url.searchParams.get("v");
+        const playlistId = url.searchParams.get("list");
+
+        if (!host.includes("youtube.com") && !host.includes("youtu.be")) {
+          return null;
+        }
+
+        let finalVideoId = videoId;
+
+        if (!finalVideoId && host === "youtu.be") {
+          finalVideoId = url.pathname.split("/").filter(Boolean)[0] || null;
+        }
+
+        return {
+          videoId: finalVideoId,
+          playlistId,
+          isMix: !!(playlistId && playlistId.startsWith("RD"))
+        };
+      } catch (error) {
+        return null;
+      }
+    }
+
+    function loadDefaultSource() {
+      const parsed = parseYouTubeUrl(DEFAULT_YOUTUBE_URL);
+
+      // The supplied URL is malformed: its video ID is only 10 characters.
+      if (!parsed || !parsed.videoId || parsed.videoId.length !== 11) {
+        setStatus(
+          "DEFAULT LINK INVALID — YouTube video ID must be 11 characters",
+          "error"
+        );
+        document.getElementById("trackTitle").textContent =
+          "Default YouTube link needs correction";
+        document.getElementById("miniTitle").textContent =
+          "Paste a valid YouTube playlist below";
+        showToast("Default URL mein YouTube video ID incomplete hai.");
+        return;
+      }
+
+      if (parsed.isMix) {
+        // RD links are YouTube Mix/Radio feeds. They are not normal playlist IDs
+        // supported by the IFrame playlist API, so load the actual video.
+        playerMode = "single";
+        player.loadVideoById(parsed.videoId);
+        setStatus("YOUTUBE MIX • CURRENT SONG", "default");
+        return;
+      }
+
+      if (parsed.playlistId) {
+        playerMode = "playlist";
+        player.loadPlaylist({
+          list: parsed.playlistId,
+          listType: "playlist",
+          index: 0,
+          startSeconds: 0
+        });
+        setStatus("DEFAULT PLAYLIST", "default");
+      } else {
+        playerMode = "single";
+        player.loadVideoById(parsed.videoId);
+        setStatus("DEFAULT SONG", "default");
+      }
+    }
+
+    function loadCustomSource() {
+      const input = document.getElementById("playlistUrl");
+      const raw = input.value.trim();
+
+      if (!raw) {
+        showToast("YouTube playlist URL paste karo.");
+        input.focus();
+        return;
+      }
+
+      const parsed = parseYouTubeUrl(raw);
+
+      if (!parsed) {
+        showToast("Valid YouTube URL ya playlist ID paste karo.");
+        return;
+      }
+
+      if (parsed.playlistId && !parsed.isMix) {
+        playerMode = "playlist";
+
+        try {
+          player.loadPlaylist({
+            list: parsed.playlistId,
+            listType: "playlist",
+            index: 0,
+            startSeconds: 0
+          });
+
+          setStatus("CUSTOM PLAYLIST", "custom");
+          document.getElementById("trackTitle").textContent = "Loading your playlist…";
+          document.getElementById("miniTitle").textContent = "Apni Yaadein, Apne Gaane";
+          showToast("Playlist load ho rahi hai…");
+        } catch (error) {
+          showToast("Playlist load nahi hui. Playlist public/unlisted honi chahiye.");
+        }
+        return;
+      }
+
+      if (parsed.videoId) {
+        if (parsed.videoId.length !== 11) {
+          showToast("YouTube video ID incomplete/invalid hai.");
+          return;
+        }
+
+        playerMode = "single";
+        player.loadVideoById(parsed.videoId);
+        setStatus("CUSTOM SONG", "custom");
+        document.getElementById("trackTitle").textContent = "Custom Song";
+        document.getElementById("miniTitle").textContent = "Babu Bhangar Wala • Custom";
+        showToast("Apna gaana load ho gaya.");
+        return;
+      }
+
+      showToast("Playlist ID nahi mila.");
+    }
+
+    function handlePlayerState(event) {
+      const playing = event.data === YT.PlayerState.PLAYING;
+      const ended = event.data === YT.PlayerState.ENDED;
+
+      document.body.classList.toggle("playing", playing);
+      document.getElementById("meter").classList.toggle("playing", playing);
+
+      setPlayIcons(playing);
+      updateUIFromPlayer();
+
+      if (playing) {
+        document.getElementById("radioDisplay").textContent =
+          "● LIVE • YAADON KA STATION";
+      } else {
+        document.getElementById("radioDisplay").textContent =
+          "FM • YAADON KA STATION";
+      }
+
+      if (ended && playerMode === "single") {
+        // Keep the single-song experience alive.
+        player.seekTo(0, true);
+      }
+    }
+
+    function handlePlayerError(event) {
+      const messages = {
+        2: "YouTube URL/video ID invalid hai.",
+        5: "YouTube player HTML5 error.",
+        100: "Video nahi mila ya private hai.",
+        101: "Video embedding allowed nahi hai.",
+        150: "Video embedding allowed nahi hai.",
+        153: "YouTube ko embed request ka referrer nahi mila. Local server se site run karo."
+      };
+
+      const msg = messages[event.data] || "YouTube playback error.";
+      setStatus("YOUTUBE ERROR " + event.data, "error");
+      showToast(msg);
+    }
+
+    function togglePlay() {
+      if (!playerReady) {
+        showToast("Player abhi load ho raha hai…");
+        return;
+      }
+
+      const state = player.getPlayerState();
+
+      if (state === YT.PlayerState.PLAYING) {
+        player.pauseVideo();
+      } else {
+        player.playVideo();
+      }
+    }
+
+    function previousTrack() {
+      if (!playerReady) return;
+
+      if (playerMode === "playlist") {
+        player.previousVideo();
+      } else {
+        player.seekTo(0, true);
+      }
+    }
+
+    function nextTrack() {
+      if (!playerReady) return;
+
+      if (playerMode === "playlist") {
+        player.nextVideo();
+      } else {
+        player.seekTo(0, true);
+        player.playVideo();
+      }
+    }
+
+    function setPlayIcons(playing) {
+      const icon = playing ? "❚❚" : "▶";
+      document.getElementById("mainPlay").textContent = icon;
+      document.getElementById("bottomPlay").textContent = icon;
+      document.getElementById("radioPlay").textContent = icon;
+    }
+
+    function updateUIFromPlayer() {
+      if (!playerReady || !player) return;
+
+      try {
+        const data = player.getVideoData();
+
+        if (data && data.title) {
+          document.getElementById("trackTitle").textContent = data.title;
+          document.getElementById("miniTitle").textContent = data.title;
+        }
+
+        const duration = player.getDuration() || 0;
+        if (duration > 0) {
+          document.getElementById("duration").textContent = formatTime(duration);
+        }
+      } catch (error) {}
+
+      startProgressLoop();
+    }
+
+    function startProgressLoop() {
+      clearTimeout(progressTimer);
+
+      function tick() {
+        if (!playerReady || !player) return;
+
+        try {
+          const current = player.getCurrentTime() || 0;
+          const duration = player.getDuration() || 0;
+          const percent = duration ? Math.min(100, current / duration * 100) : 0;
+
+          document.getElementById("progressFill").style.width = percent + "%";
+          document.getElementById("currentTime").textContent = formatTime(current);
+
+          if (duration > 0) {
+            document.getElementById("duration").textContent = formatTime(duration);
+          }
+        } catch (error) {}
+
+        progressTimer = setTimeout(tick, 500);
+      }
+
+      tick();
+    }
+
+    function formatTime(seconds) {
+      seconds = Math.max(0, Math.floor(seconds || 0));
+      const minutes = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      return String(minutes).padStart(2, "0") + ":" + String(secs).padStart(2, "0");
+    }
+
+    document.getElementById("progress").addEventListener("click", function (event) {
+      if (!playerReady) return;
+
+      const rect = this.getBoundingClientRect();
+      const percentage = Math.max(
+        0,
+        Math.min(1, (event.clientX - rect.left) / rect.width)
+      );
+
+      const duration = player.getDuration();
+
+      if (duration) {
+        player.seekTo(duration * percentage, true);
+      }
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (
+        event.code === "Space" &&
+        !["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)
+      ) {
+        event.preventDefault();
+        togglePlay();
+        burst(window.innerWidth / 2, window.innerHeight / 2, "♪ YAADEN ♪");
+      }
+    });
+
+    document.getElementById("radio").addEventListener("click", function (event) {
+      if (event.target.closest("button")) return;
+
+      togglePlay();
+
+      const rect = this.getBoundingClientRect();
+      burst(rect.left + rect.width / 2, rect.top + 55, "♪");
+    });
+
+    function burst(x, y, text) {
+      const el = document.createElement("div");
+      el.className = "coin-burst";
+      el.textContent = text;
+      el.style.left = x + "px";
+      el.style.top = y + "px";
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 900);
+    }
+
+    function setStatus(text, type) {
+      const label = document.getElementById("sourceLabel");
+      label.textContent = text;
+      label.style.color = type === "error" ? "#df8064" : "";
+    }
+
+    function showToast(text) {
+      const toast = document.getElementById("toast");
+      toast.textContent = text;
+      toast.classList.add("show");
+
+      clearTimeout(window.toastTimer);
+      window.toastTimer = setTimeout(
+        () => toast.classList.remove("show"),
+        3000
+      );
+    }
+
+    function rotateQuote() {
+      const text = document.getElementById("quoteText");
+      const author = document.getElementById("quoteAuthor");
+
+      text.style.opacity = 0;
+
+      setTimeout(() => {
+        quotesIndex = (quotesIndex + 1) % quotes.length;
+        text.textContent = quotes[quotesIndex][0];
+        author.textContent = "— " + quotes[quotesIndex][1];
+        text.style.opacity = 1;
+      }, 300);
+    }
+
+    setInterval(rotateQuote, 4200);
+
+    // Load YouTube API after all functions above are defined.
+    const ytScript = document.createElement("script");
+    ytScript.src = "https://www.youtube.com/iframe_api";
+    ytScript.async = true;
+    document.head.appendChild(ytScript);
+  </script>
+</body>
+</html>
